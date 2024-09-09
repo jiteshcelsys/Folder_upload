@@ -1,12 +1,13 @@
-// Helper function to build a tree structure
 export const buildFileTree = (files) => {
     const tree = {};
   
     files.forEach((file) => {
-      const parts = file.path.split('/'); // Split the path by '/'
-      let current = tree;
+      const relativePath = file.webkitRelativePath || file.name; // Fallback to file name if webkitRelativePath is missing
   
-      // Loop through each part of the path
+      if (!relativePath) return; // Skip files without a valid path
+  
+      const parts = relativePath.split('/'); // Split the path by '/'
+      let current = tree;
       parts.forEach((part, index) => {
         if (index === parts.length - 1) {
           // If it's the last part, it's a file
@@ -25,4 +26,3 @@ export const buildFileTree = (files) => {
   
     return tree;
   };
-  

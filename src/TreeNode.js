@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
-// Component to render file/folder tree
 export const TreeNode = ({ node, name }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,7 +13,7 @@ export const TreeNode = ({ node, name }) => {
         <span onClick={toggleOpen} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
           {isOpen ? '📂' : '📁'} {name}
         </span>
-        {true && (
+        {isOpen && (
           <div style={{ marginLeft: 20 }}>
             {Object.keys(node.children).map((childName) => (
               <TreeNode key={childName} name={childName} node={node.children[childName]} />

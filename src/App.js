@@ -2,24 +2,25 @@ import React, { useState } from 'react';
 import { buildFileTree } from './helper';
 import { TreeNode } from './TreeNode';
 
-const FolderUpload = () => {
-  const [fileTree, setFiles] = useState([]);
+const FolderTreeUpload = () => {
+  const [fileTree, setFileTree] = useState(null);
 
   const handleFolderUpload = (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    const fileList = [];
+    const files = Array.from(event.target.files); // Convert FileList to an array
 
-    for (const file of selectedFiles) {
-      fileList.push({
-        name: file.name,
-        path: file.webkitRelativePath,
-        size: file.size,
-        type: file.type,
+    setTimeout(()=>{
+    const newTree = buildFileTree(files); // Build tree structure for the new files
+
+    console.log(newTree, 'newTree');
+    // If there is already an existing tree, merge the new one with the old one
+      setFileTree((prevTree) => {
+        if (prevTree) {
+          return { ...prevTree, ...newTree }; // Merge the new tree with the existing one
+        } else {
+          return newTree; // Set the new tree if none exists yet
+        }
       });
-    }
-    const tree = buildFileTree(fileList);
-    console.log(tree);
-    setFiles(tree);
+    },10000)
   };
 
   return (
@@ -28,20 +29,19 @@ const FolderUpload = () => {
         type="file"
         webkitdirectory="true"
         directory=""
-        multiple
+        multiple // Allow multiple folders to be selected
         onChange={handleFolderUpload}
       />
-      <h3>Uploaded Folder:</h3>
-      <h4>Listing of files inside the folders</h4>
-      <ul>
+
+      <h3>File Tree Structure:</h3>
       {fileTree ? (
         <TreeNode name="root" node={{ type: 'folder', children: fileTree }} />
       ) : (
         <p>No folder uploaded.</p>
       )}
-      </ul>
     </div>
   );
 };
 
-export default FolderUpload;
+export default FolderTreeUpload;
+
