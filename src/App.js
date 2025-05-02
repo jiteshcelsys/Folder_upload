@@ -1,45 +1,32 @@
-import React, { useState } from 'react';
-import { buildFileTree } from './helper';
-import { TreeNode } from './TreeNode';
+import React from 'react';
+// import { buildFileTree } from './helper';
+// import { TreeNode } from './TreeNode';
+import VirtulaList from './VirtulaList';
 
 const FolderTreeUpload = () => {
-  const [fileTree, setFileTree] = useState(null);
 
-  const handleFolderUpload = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
+  const data = Array.from({ length: 100 }, (_, i) => ({
+    id: i + 1,
+    name: `User ${i + 1}`,
+    email: `user${i + 1}@example.com`
+  }));
 
-    setTimeout(()=>{
-    const newTree = buildFileTree(files); // Build tree structure for the new files
-
-    console.log(newTree, 'newTree');
-    // If there is already an existing tree, merge the new one with the old one
-      setFileTree((prevTree) => {
-        if (prevTree) {
-          return { ...prevTree, ...newTree }; // Merge the new tree with the existing one
-        } else {
-          return newTree; // Set the new tree if none exists yet
-        }
-      });
-    },10000)
-  };
 
   return (
     <div>
-      <input
-        type="file"
-        webkitdirectory="true"
-        directory=""
-        multiple // Allow multiple folders to be selected
-        onChange={handleFolderUpload}
+      <h3>Virtulization:</h3>
+      <VirtulaList
+      items={data.map(user => (
+        <div>
+          <strong>{user.name}</strong><br />
+          <span>{user.email}</span>
+        </div>
+      ))}
+      itemHeight={150}
+      height={300}
       />
-
-      <h3>File Tree Structure:</h3>
-      {fileTree ? (
-        <TreeNode name="root" node={{ type: 'folder', children: fileTree }} />
-      ) : (
-        <p>No folder uploaded.</p>
-      )}
     </div>
+    
   );
 };
 
